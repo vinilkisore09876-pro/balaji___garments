@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balaji Garments | Customer Directory</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- NAVIGATION BAR -->
+    <nav class="navbar">
+        <a href="index.html" class="nav-brand">
+            <div class="logo-badge"><i class="fa-solid fa-shirt"></i></div>
+            <div class="brand-text">
+                <div class="brand-title">BALAJI <span>GARMENTS</span></div>
+                <div class="brand-sub">Inventory & POS System</div>
+            </div>
+        </a>
+
+        <ul class="nav-menu" id="navMenu">
+            <li class="nav-item"><a href="index.html"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
+            <li class="nav-item"><a href="products.html"><i class="fa-solid fa-boxes-stacked"></i> Products</a></li>
+            <li class="nav-item active"><a href="customers.html"><i class="fa-solid fa-users"></i> Customers</a></li>
+            <li class="nav-item"><a href="sales.html"><i class="fa-solid fa-receipt"></i> Sales</a></li>
+        </ul>
+
+        <div class="nav-right">
+            <div class="system-status">
+                <span class="pulse-dot"></span>
+                <span>MongoDB Connected</span>
+            </div>
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle Navigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- HERO BANNER -->
+    <section class="hero-banner">
+        <div class="hero-container">
+            <div>
+                <h1 class="hero-title"><i class="fa-solid fa-users" style="color: var(--accent-gold);"></i> Customer Registry</h1>
+                <p class="hero-subtitle">Maintain customer records, contact info, and transaction histories.</p>
+            </div>
+            <div class="hero-actions">
+                <button class="btn btn-primary" onclick="openAddCustomerModal()"><i class="fa-solid fa-user-plus"></i> Add New Customer</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- STATS OVERVIEW -->
+        <div class="stats-grid" style="grid-template-columns: repeat(2, 1fr); max-width: 700px;">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon-wrapper"><i class="fa-solid fa-users"></i></div>
+                    <span class="stat-trend positive">Registered</span>
+                </div>
+                <div class="stat-label">Total Registered Customers</div>
+                <div class="stat-value" id="totalCustomerCount">0</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon-wrapper"><i class="fa-solid fa-address-book"></i></div>
+                    <span class="stat-trend positive">Active</span>
+                </div>
+                <div class="stat-label">Verified Contact Profiles</div>
+                <div class="stat-value" style="color: var(--success);"><i class="fa-solid fa-shield-halved"></i> Ready</div>
+            </div>
+        </div>
+
+        <!-- TOOLBAR & SEARCH -->
+        <div class="toolbar-card">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="customerSearch" class="search-input" placeholder="Search by name, customer ID, phone, or email...">
+            </div>
+        </div>
+
+        <!-- CUSTOMERS TABLE SECTION -->
+        <div class="section-card">
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Customer ID</th>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Address</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customersTableBody">
+                        <tr>
+                            <td colspan="6" class="empty-state">
+                                <i class="fa-solid fa-spinner fa-spin empty-icon"></i>
+                                <div>Loading customers from database...</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ==========================================
+         ADD / EDIT CUSTOMER MODAL
+         ========================================== -->
+    <div class="modal-backdrop" id="customerModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="modal-title" id="customerModalTitle"><i class="fa-solid fa-user-plus" style="color: var(--accent-gold);"></i> Add New Customer</h3>
+                <button class="modal-close" onclick="closeModal('customerModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="customerForm">
+                <div class="modal-body">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Customer ID *</label>
+                            <input type="text" id="c_customer_id" class="form-control" placeholder="e.g. C001" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Customer Name *</label>
+                            <input type="text" id="c_name" class="form-control" placeholder="e.g. Vinil Kumar" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Phone Number *</label>
+                            <input type="tel" id="c_phone" class="form-control" placeholder="e.g. 9876543210" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" id="c_email" class="form-control" placeholder="e.g. vinil@gmail.com">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label class="form-label">Address</label>
+                            <textarea id="c_address" class="form-control" rows="3" placeholder="e.g. T. Nagar, Chennai"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('customerModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Customer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- DELETE CONFIRMATION MODAL -->
+    <div class="modal-backdrop" id="confirmModal">
+        <div class="modal-card" style="max-width: 440px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="confirmModalTitle"><i class="fa-solid fa-triangle-exclamation" style="color: var(--danger);"></i> Confirm Action</h3>
+                <button class="modal-close" onclick="closeModal('confirmModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmModalMessage" style="color: var(--text-secondary); font-size: 14px;">Are you sure you want to perform this operation?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('confirmModal')">Cancel</button>
+                <button class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        © 2026 Balaji Garments | Enterprise DBMS Inventory Management System
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            initCustomersPage();
+        });
+    </script>
+</body>
+</html>
